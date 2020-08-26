@@ -178,6 +178,7 @@ class Filmstrip extends Component <Props> {
         const filmstripStyle = { };
         const filmstripRemoteVideosContainerStyle = {};
         let remoteVideoContainerClassName = 'remote-videos-container';
+        this.props.dispatch(setFilmstripVisible(false));
 
         switch (this.props._currentLayout) {
         case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
@@ -344,16 +345,7 @@ class Filmstrip extends Component <Props> {
         const icon = this.props._visible ? IconMenuDown : IconMenuUp;
         const { t } = this.props;
 
-        return (
-            <div className = 'filmstrip__toolbar'>
-                <button
-                    aria-label = { t('toolbar.accessibilityLabel.toggleFilmstrip') }
-                    id = 'toggleFilmstripButton'
-                    onClick = { this._onToolbarToggleFilmstrip }>
-                    <Icon src = { icon } />
-                </button>
-            </div>
-        );
+        return;
     }
 }
 

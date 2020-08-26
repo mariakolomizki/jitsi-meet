@@ -15,23 +15,9 @@ import { getOverlayToRender } from '../overlay';
  * @returns {void}
  */
 export function maybeShowSuboptimalExperienceNotification(dispatch, t) {
-    if (isSuboptimalBrowser()) {
-        dispatch(
-            showWarningNotification(
-                {
-                    titleKey: 'notify.suboptimalExperienceTitle',
-                    description: translateToHTML(
-                        t,
-                        'notify.suboptimalBrowserWarning',
-                        {
-                            recommendedBrowserPageLink: `${window.location.origin}/static/recommendedBrowsers.html`
-                        }
-                    )
-                }
-            )
-        );
-    }
+    //NO_OP
 }
+
 
 /**
  * Tells whether or not the notifications should be displayed within

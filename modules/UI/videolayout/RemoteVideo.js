@@ -14,6 +14,7 @@ import {
 } from '../../../react/features/base/lib-jitsi-meet';
 import {
     getPinnedParticipant,
+    getLocalParticipant,
     pinParticipant
 } from '../../../react/features/base/participants';
 import { PresenceLabel } from '../../../react/features/presence-status';
@@ -120,21 +121,28 @@ export default class RemoteVideo extends SmallVideo {
         this.container.onclick = this._onContainerClick;
     }
 
-    /**
-     *
+  /**
+     *  Make only Remote Container for Moderators
      */
     addRemoteVideoContainer() {
-        this.container = createContainer(this.videoSpanId);
-        this.$container = $(this.container);
-        this.initializeAvatar();
-        this._setThumbnailSize();
-        this.initBrowserSpecificProperties();
-        this.updateRemoteVideoMenu();
-        this.updateStatusBar();
-        this.addAudioLevelIndicator();
-        this.addPresenceLabel();
 
-        return this.container;
+        let _participant = getLocalParticipant(APP.store.getState());
+
+        if (_participant.name === undefined) {
+                return;
+
+        } else {
+            this.container = createContainer(this.videoSpanId);
+            this.$container = $(this.container);
+            this.initializeAvatar();
+            this._setThumbnailSize();
+            this.initBrowserSpecificProperties();
+            this.updateRemoteVideoMenu();
+            this.updateStatusBar();
+            this.addAudioLevelIndicator();
+            this.addPresenceLabel();
+            return this.container;
+        }
     }
 
     /**

@@ -101,6 +101,11 @@ type Props = {
     _conference: Object,
 
     /**
+     * The redux representation of the local participant.
+     */
+    _localParticipantRole: Object,
+
+    /**
      * The tooltip key to use when screensharing is disabled. Or undefined
      * if non to be shown and the button to be hidden.
      */
@@ -1202,6 +1207,7 @@ class Toolbox extends Component<Props, State> {
             _chatOpen,
             _overflowMenuVisible,
             _raisedHand,
+            _localParticipantRole,
             t
         } = this.props;
         const overflowMenuContent = this._renderOverflowMenuContent();
@@ -1298,70 +1304,110 @@ class Toolbox extends Component<Props, State> {
         overflowMenuContent.splice(
             1, 0, ...this._renderMovedButtons(movedButtons));
 
-        return (
-            <div className = 'toolbox-content'>
-                <div className = 'button-group-left'>
-                    { buttonsLeft.indexOf('chat') !== -1
-                        && <div className = 'toolbar-button-with-badge'>
-                            <ToolbarButton
-                                accessibilityLabel = { t('toolbar.accessibilityLabel.chat') }
-                                icon = { IconChat }
-                                onClick = { this._onToolbarToggleChat }
-                                toggled = { _chatOpen }
-                                tooltip = { t('toolbar.chat') } />
-                            <ChatCounter />
-                        </div> }
-                    { buttonsLeft.indexOf('desktop') !== -1
-                        && this._renderDesktopSharingButton() }
-                    { buttonsLeft.indexOf('raisehand') !== -1
-                        && <ToolbarButton
-                            accessibilityLabel = { t('toolbar.accessibilityLabel.raiseHand') }
-                            icon = { IconRaisedHand }
-                            onClick = { this._onToolbarToggleRaiseHand }
-                            toggled = { _raisedHand }
-                            tooltip = { t('toolbar.raiseHand') } /> }
-                    {
-                        buttonsLeft.indexOf('closedcaptions') !== -1
-                            && <ClosedCaptionButton />
-                    }
-                </div>
-                <div className = 'button-group-center'>
-                    { this._renderAudioButton() }
-                    <HangupButton
-                        visible = { this._shouldShowButton('hangup') } />
-                    { this._renderVideoButton() }
-                </div>
-                <div className = 'button-group-right'>
-                    { buttonsRight.indexOf('localrecording') !== -1
-                        && <LocalRecordingButton
-                            onClick = {
-                                this._onToolbarOpenLocalRecordingInfoDialog
-                            } />
-                    }
-                    { buttonsRight.indexOf('tileview') !== -1
-                        && <TileViewButton /> }
-                    { buttonsRight.indexOf('invite') !== -1
-                        && <ToolbarButton
-                            accessibilityLabel =
-                                { t('toolbar.accessibilityLabel.invite') }
-                            icon = { IconInviteMore }
-                            onClick = { this._onToolbarOpenInvite }
-                            tooltip = { t('toolbar.invite') } /> }
-                    { buttonsRight.indexOf('security') !== -1
-                        && <SecurityDialogButton customClass = 'security-toolbar-button' /> }
-                    { buttonsRight.indexOf('overflowmenu') !== -1
-                        && <OverflowMenuButton
-                            isOpen = { _overflowMenuVisible }
-                            onVisibilityChange = { this._onSetOverflowVisible }>
-                            <ul
-                                aria-label = { t(toolbarAccLabel) }
-                                className = 'overflow-menu'>
-                                { overflowMenuContent }
-                            </ul>
-                        </OverflowMenuButton> }
-                </div>
-            </div>);
-    }
+            if (_localParticipantRole === 'moderator'){
+
+                return (
+                    <div className = 'toolbox-content'>
+                        <div className = 'button-group-left'>
+                            { buttonsLeft.indexOf('chat') !== -1
+                                && <div className = 'toolbar-button-with-badge'>
+                                    <ToolbarButton
+                                        accessibilityLabel = { t('toolbar.accessibilityLabel.chat') }
+                                        icon = { IconChat }
+                                        onClick = { this._onToolbarToggleChat }
+                                        toggled = { _chatOpen }
+                                        tooltip = { t('toolbar.chat') } />
+                                    <ChatCounter />
+                                </div> }
+                            { buttonsLeft.indexOf('desktop') !== -1
+                                && this._renderDesktopSharingButton() }
+                            { buttonsLeft.indexOf('raisehand') !== -1
+                                && <ToolbarButton
+                                    accessibilityLabel = { t('toolbar.accessibilityLabel.raiseHand') }
+                                    icon = { IconRaisedHand }
+                                    onClick = { this._onToolbarToggleRaiseHand }
+                                    toggled = { _raisedHand }
+                                    tooltip = { t('toolbar.raiseHand') } /> }
+                            {
+                                buttonsLeft.indexOf('closedcaptions') !== -1
+                                    && <ClosedCaptionButton />
+                            }
+                        </div>
+                        <div className = 'button-group-center'>
+                            { this._renderAudioButton() }
+                            <HangupButton
+                                visible = { this._shouldShowButton('hangup') } />
+                            { this._renderVideoButton() }
+                        </div>
+                        <div className = 'button-group-right'>
+                            { buttonsRight.indexOf('localrecording') !== -1
+                                && <LocalRecordingButton
+                                    onClick = {
+                                        this._onToolbarOpenLocalRecordingInfoDialog
+                                    } />
+                            }
+                            { buttonsRight.indexOf('tileview') !== -1
+                                && <TileViewButton /> }
+                            { buttonsRight.indexOf('invite') !== -1
+                                && <ToolbarButton
+                                    accessibilityLabel =
+                                        { t('toolbar.accessibilityLabel.invite') }
+                                    icon = { IconInviteMore }
+                                    onClick = { this._onToolbarOpenInvite }
+                                    tooltip = { t('toolbar.invite') } /> }
+                            { buttonsRight.indexOf('security') !== -1
+                                && <SecurityDialogButton customClass = 'security-toolbar-button' /> }
+                            { buttonsRight.indexOf('overflowmenu') !== -1
+                                && <OverflowMenuButton
+                                    isOpen = { _overflowMenuVisible }
+                                    onVisibilityChange = { this._onSetOverflowVisible }>
+                                    <ul
+                                        aria-label = { t(toolbarAccLabel) }
+                                        className = 'overflow-menu'>
+                                        { overflowMenuContent }
+                                    </ul>
+                                </OverflowMenuButton> }
+                        </div>
+                    </div>);
+            } else {
+                return (
+                    <div className = 'toolbox-content'>
+                        <div className = 'button-group-left'>
+                            { buttonsLeft.indexOf('chat') !== -1
+                                && <div className = 'toolbar-button-with-badge'>
+                                    <ToolbarButton
+                                        accessibilityLabel = { t('toolbar.accessibilityLabel.chat') }
+                                        icon = { IconChat }
+                                        onClick = { this._onToolbarToggleChat }
+                                        toggled = { _chatOpen }
+                                        tooltip = { t('toolbar.chat') } />
+                                    <ChatCounter />
+                                </div> }
+                            { buttonsLeft.indexOf('desktop') !== -1
+                                && this._renderDesktopSharingButton() }
+                            { buttonsLeft.indexOf('raisehand') !== -1
+                                && <ToolbarButton
+                                    accessibilityLabel = { t('toolbar.accessibilityLabel.raiseHand') }
+                                    icon = { IconRaisedHand }
+                                    onClick = { this._onToolbarToggleRaiseHand }
+                                    toggled = { _raisedHand }
+                                    tooltip = { t('toolbar.raiseHand') } /> }
+                            {
+                                buttonsLeft.indexOf('closedcaptions') !== -1
+                                    && <ClosedCaptionButton />
+                            }
+                        </div>
+                        <div className = 'button-group-center'>
+                            { this._renderAudioButton() }
+                            <HangupButton
+                                visible = { this._shouldShowButton('hangup') } />
+                            { this._renderVideoButton() }
+                        </div>
+
+                    </div>);
+            }
+        }
+    
 
     _shouldShowButton: (string) => boolean;
 
@@ -1435,6 +1481,7 @@ function _mapStateToProps(state) {
         _isGuest: state['features/base/jwt'].isGuest,
         _fullScreen: fullScreen,
         _tileViewEnabled: shouldDisplayTileView(state),
+        _localParticipantRole: localParticipant.role,
         _localParticipantID: localParticipant.id,
         _localRecState: localRecordingStates,
         _locked: locked,
